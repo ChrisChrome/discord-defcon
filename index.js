@@ -400,7 +400,7 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 		})
 	})
 
-	if (defcon <= 4) {
+	if (defcon <= 3) {
 		// DM user saying Invites are disabled for security reasons, then kick them with the same reason
 		member.send("Invites are currently disabled for security reasons. Please contact a staff member for assistance.").then(() => {
 			member.kick(`DEFCON ${defcon}`);

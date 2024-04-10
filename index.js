@@ -21,7 +21,7 @@ const client = new Discord.Client({
 		"AutoModerationConfiguration",
 		"AutoModerationExecution",
 		"GuildMembers",
-		"GuildModeration",
+		"GuildModeration"
 	]
 });
 
@@ -163,10 +163,12 @@ function updateStatusMessages() {
 		})
 	});
 	status_names.forEach((channel) => {
-		if (!channel.type == Discord.ChannelType.GuildVoice) return console.log(`${colors.red("[ERROR]")} Channel ${channel.name} is not a voice channel.`);
-		channel.setName(`[ DEFCON ${defcon} ]`).catch((err) => {
-			console.log(`${colors.red("[ERROR]")} Could not set channel name for ${channel.name}.`);
-		});
+		let chan = client.channels.cache.get(channel);
+		if (!chan.type == Discord.ChannelType.GuildVoice) return console.log(`${colors.red("[ERROR]")} Channel ${chan.name} is not a voice channel.`);
+		console.log(`${colors.green("[INFO]")} Setting channel name for ${chan.name}.`)
+		chan.setName(`[ DEFCON ${defcon} ]`).then(() => {
+			console.log(`${colors.green("[INFO]")} Successfully set channel name for ${chan.name}.`);
+		})
 	});
 }
 
@@ -192,7 +194,7 @@ client.on("ready", async () => {
 		if (msg.change_name) {
 			// if name is set, add it to status_names, then skip the rest
 			console.log(`${colors.green("[INFO]")} Found channel name change for ${channel.name}.`)
-			return status_names.push(channel);
+			return status_names.push(msg.channel_id);
 		}
 		console.log(`${colors.green("[INFO]")} Found status message for ${channel.name}.`)
 		// fetch the message id, if it doesnt exist, throw error

@@ -1,0 +1,60 @@
+{
+	"debug": false,
+	"discord": {
+		"token": "",
+		"status_messages": [
+			{
+				"comment": "Main status",
+				"channel_id": "",
+				"message_id": ""
+			},
+			{
+				"comment": "Voice Status",
+				"channel_id": "",
+				"change_name": true
+			}
+		],
+		"actionable_servers": [""],
+		"slowmodes": [
+			{
+				"comment": "main chat",
+				"channel_id": "",
+				"slowmode": 60,
+				"defaultSlowmode": 0
+			}
+		],
+		"slowmode_categories": [
+			{
+				"comment": "Main Chat rooms",
+				"category_id": "",
+				"slowmode": 60,
+				"defaultSlowmode": 0
+			}
+		],
+		"invitelog": ""
+	},
+	"DEFCON": {
+		"levels": {
+			"1": {
+				"color": "#ec3e40",
+				"message": "**DEFCON 1** - High Alert, Full Lockdown. Break all Discord Invites and lock down the SL Server if necessary."
+			},
+			"2": {
+				"color": "#ff9b2b",
+				"message": "**DEFCON 2** - High Alert, Server invite links are locked, Discord server chats are heavily monitored (i.e. slowmodes, active moderation)."
+			},
+			"3": {
+				"color": "#f5d800",
+				"message": "**DEFCON 3** - Moderate Alert, Server invites are locked."
+			},
+			"4": {
+				"color": "#377fc7",
+				"message": "**DEFCON 4** - Moderate Alert, Server invites are monitored for suspicious individuals."
+			},
+			"5": {
+				"color": "#01a46d",
+				"message": "**DEFCON 5** - Low Alert, Normal Operations."
+			}
+		}
+	}
+}

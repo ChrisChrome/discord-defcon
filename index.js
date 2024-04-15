@@ -190,9 +190,9 @@ client.on("ready", async () => {
 	// Get port for webserver from environment over config file (for running on pterodactyl/other panels)
 	var port = process.env.SERVER_PORT || config.port;
 	// Start webserver
-	if (port) app.listen(port, () => {
-		console.log(`${colors.cyan("[INFO]")} Webserver started on port ${port}`)
-	})
+	// if (port) app.listen(port, () => {
+	// 	console.log(`${colors.cyan("[INFO]")} Webserver started on port ${port}`)
+	// })
 	console.log(`${colors.cyan("[INFO]")} Logged in as ${client.user.tag}`);
 	// Get status messages and actionable servers
 	config.discord.status_messages.forEach((msg) => {
@@ -250,6 +250,9 @@ client.on("ready", async () => {
 				client.invites[guildInvite.code] = guildInvite.uses
 			})
 		})
+		if(guild.vanityURLCode) {
+			client.invites[guild.vanityURLCode] = guild.vanityURLUses
+		}
 	})
 
 	const commands = [
@@ -386,10 +389,7 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 	const channel = client.channels.cache.get(config.discord.invitelog)
 	let guild = member.guild
 	member.guild.invites.fetch().then(async guildInvites => { //get all guild invites
-		console.log(`len ${member.guild.invites.holds.length}`)
 		guildInvites.forEach(invite => { //basically a for loop over the invites
-			invites++
-			console.log(invites)
 			if (invite.uses != client.invites[invite.code]) { //if it doesn't match what we stored:
 				channel.send({
 					embeds: [{
@@ -398,7 +398,7 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 						fields: [
 							{
 								name: "New Member",
-								value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
+								value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${new Date(member.joinedAt)/1000}>\nAccount Created: <t:${new Date(member.user.createdTimestamp)/1000}>`
 							},
 							{
 								name: "Invite",
@@ -407,40 +407,38 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 							{
 								name: "Guild",
 								value: `${guild.name}\n\`${guild.id}\``
-							},
-							{
-								name: "User IP",
-								value: client.invites[invite.code].ip ? client.invites[invite.code].ip : "N/A"
 							}
 						]
 					}]
 				});
 				client.invites[invite.code] = invite.uses
-			} else if (invites == guildInvites.length -1) {
-				// Assume its a custom link lol
-				channel.send({
-					embeds: [{
-						color: 0x00ff00,
-						title: "New Member",
-						fields: [
-							{
-								name: "New Member",
-								value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
-							},
-							{
-								name: "Invite",
-								value: `N/A (Used Custom Invite)`
-							},
-							{
-								name: "Guild",
-								value: `${guild.name}\n\`${guild.id}\``
-							}
-						]
-					}]
-				});
 			}
+
 		})
 	})
+	// Handle vanity URLs
+	if (member.guild.vanityURLUses != client.invites[member.guild.vanityURLCode]) { // They used the vanity URL
+		channel.send({
+			embeds: [{
+				color: 0x00ff00,
+				title: "New Member",
+				fields: [
+					{
+						name: "New Member",
+						value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${new Date(member.joinedAt)/1000}>\nAccount Created: <t:${new Date(member.user.createdTimestamp)/1000}>`
+					},
+					{
+						name: "Invite",
+						value: `Vanity Code: ${member.guild.vanityURLCode}\nUses: ${member.vanityURLUses}`
+					},
+					{
+						name: "Guild",
+						value: `${guild.name}\n\`${guild.id}\``
+					}
+				]
+			}]
+		});
+	}
 
 	if (defcon <= 3) {
 		// DM user saying Invites are disabled for security reasons, then kick them with the same reason
@@ -458,20 +456,20 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 	}
 })
 
-app.set('view engine', 'ejs');
-// set views directory
-app.set('views', path.join(__dirname, 'html'));
+// app.set('view engine', 'ejs');
+// // set views directory
+// app.set('views', path.join(__dirname, 'html'));
 
-// Start doing express stuff
-app.get("/", async (req, res) => {
-	// If defcon level is 3 or lower, return 403
-	if (defcon <= 3 || req.query.test) return res.status(403).render("lockdown.ejs")
+// // Start doing express stuff
+// app.get("/", async (req, res) => {
+// 	// If defcon level is 3 or lower, return 403
+// 	if (defcon <= 3 || req.query.test) return res.status(403).render("lockdown.ejs")
 
-	// Otherwise, make a new invite, single use, and redirect the user to it!
-	client.guilds.cache.get(config.discord.invite_guild).invites.create(config.discord.invite_channel, { maxAge: 60, maxUses: 1, unique: true }).then((invite) => {
-		client.invites[invite.code].ip = req.headers["X-Forwarded-For"]
-		res.redirect(`https://discord.com/invite/${invite.code}`);
-	})
-});
+// 	// Otherwise, make a new invite, single use, and redirect the user to it!
+// 	client.guilds.cache.get(config.discord.invite_guild).invites.create(config.discord.invite_channel, { maxAge: 60, maxUses: 1, unique: true }).then((invite) => {
+// 		client.invites[invite.code].ip = req.headers["X-Forwarded-For"]
+// 		res.redirect(`https://discord.com/invite/${invite.code}`);
+// 	})
+// });
 
 client.login(config.discord.token)

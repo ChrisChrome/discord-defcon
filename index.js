@@ -417,6 +417,7 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 		})
 	})
 	// Handle vanity URLs
+	console.log(`Checking vanity: ${member.guild.vanityURLUses != client.invites[member.guild.vanityURLCode]} ${member.guild.vanityURLCode} ${member.guild.vanityURLUses}`)
 	if (member.guild.vanityURLUses != client.invites[member.guild.vanityURLCode]) { // They used the vanity URL
 		channel.send({
 			embeds: [{

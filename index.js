@@ -113,7 +113,7 @@ function updateDefcon(level) {
 // 						chan.setRateLimitPerUser(channel.time);
 // 					}
 // 				})
-				
+
 // 			} else {
 // 				return channel.channel.setRateLimitPerUser(channel.time);
 // 			}
@@ -382,64 +382,62 @@ client.on('inviteCreate', (invite) => { //if someone creates an invite while bot
 });
 
 client.on('guildMemberAdd', async (member) => { // We're just gonna always send invite logs, even if we're not monitoring them
-	isInv = false
+	invites = 0;
 	const channel = client.channels.cache.get(config.discord.invitelog)
 	let guild = member.guild
 	member.guild.invites.fetch().then(async guildInvites => { //get all guild invites
-		await (async () => {
-			guildInvites.forEach(invite => { //basically a for loop over the invites
-
-				if (invite.uses != client.invites[invite.code]) { //if it doesn't match what we stored:
-					channel.send({
-						embeds: [{
-							color: 0x00ff00,
-							title: "New Member",
-							fields: [
-								{
-									name: "New Member",
-									value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
-								},
-								{
-									name: "Invite",
-									value: `Inviter: ${(invite.inviter.id == client.user.id) ? "Custom Invite URL (Through Bot)" : `${invite.inviter} (${invite.inviter.displayName})`}\nCode: ${invite.code}\nUses: ${invite.uses}`
-								},
-								{
-									name: "Guild",
-									value: `${guild.name}\n\`${guild.id}\``
-								},
-								{
-									name: "User IP",
-									value: client.invites[invite.code].ip ? client.invites[invite.code].ip : "N/A"
-								}
-							]
-						}]
-					});
-					client.invites[invite.code] = invite.uses
-					isInv = true
-				}
-			})
-		})();
-		if (isInv) return;
-		channel.send({
-			embeds: [{
-				color: 0x00ff00,
-				title: "New Member",
-				fields: [
-					{
-						name: "New Member",
-						value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
-					},
-					{
-						name: "Invite",
-						value: `N/A (Used Custom Invite)`
-					},
-					{
-						name: "Guild",
-						value: `${guild.name}\n\`${guild.id}\``
-					}
-				]
-			}]
-		});
+		guildInvites.forEach(invite => { //basically a for loop over the invites
+			if (invite.uses != client.invites[invite.code]) { //if it doesn't match what we stored:
+				channel.send({
+					embeds: [{
+						color: 0x00ff00,
+						title: "New Member",
+						fields: [
+							{
+								name: "New Member",
+								value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
+							},
+							{
+								name: "Invite",
+								value: `Inviter: ${(invite.inviter.id == client.user.id) ? "Custom Invite URL (Through Bot)" : `${invite.inviter} (${invite.inviter.displayName})`}\nCode: ${invite.code}\nUses: ${invite.uses}`
+							},
+							{
+								name: "Guild",
+								value: `${guild.name}\n\`${guild.id}\``
+							},
+							{
+								name: "User IP",
+								value: client.invites[invite.code].ip ? client.invites[invite.code].ip : "N/A"
+							}
+						]
+					}]
+				});
+				client.invites[invite.code] = invite.uses
+				invites++
+			} else if (invites == guildInvites.toJSON().length()) {
+				// Assume its a custom link lol
+				channel.send({
+					embeds: [{
+						color: 0x00ff00,
+						title: "New Member",
+						fields: [
+							{
+								name: "New Member",
+								value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
+							},
+							{
+								name: "Invite",
+								value: `N/A (Used Custom Invite)`
+							},
+							{
+								name: "Guild",
+								value: `${guild.name}\n\`${guild.id}\``
+							}
+						]
+					}]
+				});
+			}
+		})
 	})
 
 	if (defcon <= 3) {
@@ -468,7 +466,7 @@ app.get("/", async (req, res) => {
 	if (defcon <= 3 || req.query.test) return res.status(403).render("lockdown.ejs")
 
 	// Otherwise, make a new invite, single use, and redirect the user to it!
-	client.guilds.cache.get(config.discord.invite_guild).invites.create(config.discord.invite_channel, {maxAge: 60, maxUses: 1, unique: true}).then((invite) => {
+	client.guilds.cache.get(config.discord.invite_guild).invites.create(config.discord.invite_channel, { maxAge: 60, maxUses: 1, unique: true }).then((invite) => {
 		client.invites[invite.code].ip = req.headers["X-Forwarded-For"]
 		res.redirect(`https://discord.com/invite/${invite.code}`);
 	})

@@ -385,52 +385,55 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 	const channel = client.channels.cache.get(config.discord.invitelog)
 	let guild = member.guild
 	member.guild.invites.fetch().then(guildInvites => { //get all guild invites
-		guildInvites.forEach(invite => { //basically a for loop over the invites
+		await (async () => {
+			guildInvites.forEach(invite => { //basically a for loop over the invites
 
-			if (invite.uses != client.invites[invite.code]) { //if it doesn't match what we stored:
-				channel.send({
-					embeds: [{
-						color: 0x00ff00,
-						title: "New Member",
-						fields: [
-							{
-								name: "New Member",
-								value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
-							},
-							{
-								name: "Invite",
-								value: `Inviter: ${(invite.inviter.id == client.user.id) ? "Custom Invite URL (Through Bot)" : `${invite.inviter} (${invite.inviter.displayName})`}\nCode: ${invite.code}\nUses: ${invite.uses}`
-							},
-							{
-								name: "Guild",
-								value: `${guild.name}\n\`${guild.id}\``
-							}
-						]
-					}]
-				});
-				return client.invites[invite.code] = invite.uses
-			}
-			channel.send({
-				embeds: [{
-					color: 0x00ff00,
-					title: "New Member",
-					fields: [
-						{
-							name: "New Member",
-							value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
-						},
-						{
-							name: "Invite",
-							value: `N/A (Used Custom Invite)`
-						},
-						{
-							name: "Guild",
-							value: `${guild.name}\n\`${guild.id}\``
-						}
-					]
-				}]
-			});
-		})
+				if (invite.uses != client.invites[invite.code]) { //if it doesn't match what we stored:
+					channel.send({
+						embeds: [{
+							color: 0x00ff00,
+							title: "New Member",
+							fields: [
+								{
+									name: "New Member",
+									value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
+								},
+								{
+									name: "Invite",
+									value: `Inviter: ${(invite.inviter.id == client.user.id) ? "Custom Invite URL (Through Bot)" : `${invite.inviter} (${invite.inviter.displayName})`}\nCode: ${invite.code}\nUses: ${invite.uses}`
+								},
+								{
+									name: "Guild",
+									value: `${guild.name}\n\`${guild.id}\``
+								}
+							]
+						}]
+					});
+					return client.invites[invite.code] = invite.uses
+				}
+			})
+		})();
+
+		channel.send({
+			embeds: [{
+				color: 0x00ff00,
+				title: "New Member",
+				fields: [
+					{
+						name: "New Member",
+						value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${member.joinedTimestamp}>\nAccount Created: <t:${member.user.createdTimestamp}>`
+					},
+					{
+						name: "Invite",
+						value: `N/A (Used Custom Invite)`
+					},
+					{
+						name: "Guild",
+						value: `${guild.name}\n\`${guild.id}\``
+					}
+				]
+			}]
+		});
 	})
 
 	if (defcon <= 3) {

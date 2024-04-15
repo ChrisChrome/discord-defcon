@@ -367,7 +367,7 @@ client.on('inviteCreate', (invite) => { //if someone creates an invite while bot
 					name: "Invite",
 					// inline check, if expiry is in over 100 years, then it's never, otherwise it's the date
 					// ${invite.expiresTimestamp > 95617584000 ? "Never" : `<t:${invite.expiresTimestamp}>`
-					value: `Code: ${invite.code}\nMax Uses: ${invite.maxUses}\nExpires ${Math.floor(new Date(invite.expiresAt)/1000)}\nCreated at: ${Math.floor(new Date(invite.createdAt)/1000)}`
+					value: `Code: ${invite.code}\nMax Uses: ${invite.maxUses}\nExpires <t:${Math.floor(new Date(invite.expiresAt)/1000)}:R>\nCreated at: <t:${Math.floor(new Date(invite.createdAt)/1000)}>`
 				},
 				{
 					name: "Guild",

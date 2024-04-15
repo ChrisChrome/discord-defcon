@@ -400,7 +400,7 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 						fields: [
 							{
 								name: "New Member",
-								value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${new Date(member.joinedAt)/1000}>\nAccount Created: <t:${new Date(member.user.createdTimestamp)/1000}>`
+								value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${Math.floor(new Date(member.joinedAt)/1000)}>\nAccount Created: <t:${Math.floor(new Date(member.user.createdTimestamp)/1000)}>`
 							},
 							{
 								name: "Invite",
@@ -428,7 +428,7 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 					fields: [
 						{
 							name: "New Member",
-							value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${new Date(member.joinedAt)/1000}>\nAccount Created: <t:${new Date(member.user.createdTimestamp)/1000}>`
+							value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${Math.floor(new Date(member.joinedAt)/1000)}>\nAccount Created: <t:${Math.floor(new Date(member.user.createdTimestamp)/1000)}>`
 						},
 						{
 							name: "Invite",

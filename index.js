@@ -387,6 +387,8 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 	let guild = member.guild
 	member.guild.invites.fetch().then(async guildInvites => { //get all guild invites
 		guildInvites.forEach(invite => { //basically a for loop over the invites
+			invites++
+			console.log(invites)
 			if (invite.uses != client.invites[invite.code]) { //if it doesn't match what we stored:
 				channel.send({
 					embeds: [{
@@ -413,8 +415,6 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 					}]
 				});
 				client.invites[invite.code] = invite.uses
-				invites++
-				console.log(invites)
 			} else if (invites == guildInvites.length -1) {
 				// Assume its a custom link lol
 				channel.send({

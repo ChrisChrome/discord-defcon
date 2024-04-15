@@ -1,0 +1,63 @@
+<html>
+
+<head>
+	<title>The Stash</title>
+	<!-- Bootstrap CSS -->
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css" rel="stylesheet">
+
+	<!-- Bootswatch Darkly theme -->
+	<link href="https://stackpath.bootstrapcdn.com/bootswatch/latest/darkly/bootstrap.min.css" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Custom CSS to center main div both vertically and horizontally-->
+	<style>
+		body {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100vh;
+			/* 100% of the viewport height */
+			margin: 0;
+		}
+
+		.centered-div {
+			/* Additional styling if needed */
+			max-width: 400px;
+		}
+	</style>
+	<style>
+		body {
+			position: relative;
+			/* Adjust this value based on your footer height */
+		}
+
+		footer {
+			position: absolute;
+			bottom: 0;
+			text-align: center;
+			
+			padding: 10px;
+		}
+	</style>
+</head>
+
+<body>
+
+
+	<div class="card border-danger mb-3 centered-div">
+		<div class="card-header">Invite Disabled</div>
+		<div class="card-body">
+			<p class="card-text">For security reasons, server invites have been disabled! </br>
+			Please try again later!
+			</p>
+		</div>
+	</div>
+
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/latest/js/bootstrap.min.js"></script>
+	<footer>
+		<p>&copy; <%= new Date().getFullYear() %> The Stash</p>
+	</footer>
+</body>
+
+
+</html>

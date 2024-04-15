@@ -1,6 +1,8 @@
 {
 	"debug": false,
 	"discord": {
+		"invite_guild": "",
+		"invite_channel": "",
 		"token": "",
 		"status_messages": [
 			{

@@ -414,7 +414,7 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 				});
 				client.invites[invite.code] = invite.uses
 				invites++
-			} else if (invites == guildInvites.toJSON().length()) {
+			} else if (invites == guildInvites.length) {
 				// Assume its a custom link lol
 				channel.send({
 					embeds: [{

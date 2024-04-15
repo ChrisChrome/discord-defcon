@@ -405,6 +405,10 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 								{
 									name: "Guild",
 									value: `${guild.name}\n\`${guild.id}\``
+								},
+								{
+									name: "User IP",
+									value: client.invites[invite.code].ip ? client.invites[invite.code].ip : "N/A"
 								}
 							]
 						}]
@@ -463,6 +467,7 @@ app.get("/", async (req, res) => {
 
 	// Otherwise, make a new invite, single use, and redirect the user to it!
 	client.guilds.cache.get(config.discord.invite_guild).invites.create(config.discord.invite_channel, {maxAge: 60, maxUses: 1, unique: true}).then((invite) => {
+		client.invites[invite.code].ip = req.headers["X-Forwarded-For"]
 		res.redirect(`https://discord.com/invite/${invite.code}`);
 	})
 });

@@ -250,9 +250,9 @@ client.on("ready", async () => {
 				client.invites[guildInvite.code] = guildInvite.uses
 			})
 		})
-		if(guild.vanityURLCode) {
-			client.invites[guild.vanityURLCode] = guild.vanityURLUses
-		}
+		guild.fetchVanityData().then(vanityData => {
+			client.invites[vanityData.code] = vanityData.uses
+		})
 	})
 
 	const commands = [
@@ -417,29 +417,31 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 		})
 	})
 	// Handle vanity URLs
-	console.log(`Checking vanity: ${member.guild.vanityURLUses != client.invites[member.guild.vanityURLCode]} ${member.guild.vanityURLCode} ${member.guild.vanityURLUses}`)
-	if (member.guild.vanityURLUses != client.invites[member.guild.vanityURLCode]) { // They used the vanity URL
-		channel.send({
-			embeds: [{
-				color: 0x00ff00,
-				title: "New Member",
-				fields: [
-					{
-						name: "New Member",
-						value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${new Date(member.joinedAt)/1000}>\nAccount Created: <t:${new Date(member.user.createdTimestamp)/1000}>`
-					},
-					{
-						name: "Invite",
-						value: `Vanity Code: ${member.guild.vanityURLCode}\nUses: ${member.vanityURLUses}`
-					},
-					{
-						name: "Guild",
-						value: `${guild.name}\n\`${guild.id}\``
-					}
-				]
-			}]
-		});
-	}
+	member.guild.fetchVanityData().then(vanityData => {
+		if (vanityData.uses != client.invites[vanityData.code]) { // They used the vanity URL
+			channel.send({
+				embeds: [{
+					color: 0x00ff00,
+					title: "New Member",
+					fields: [
+						{
+							name: "New Member",
+							value: `${member} (${member.user.displayName})\n\`${member.id}\`\nJoined at: <t:${new Date(member.joinedAt)/1000}>\nAccount Created: <t:${new Date(member.user.createdTimestamp)/1000}>`
+						},
+						{
+							name: "Invite",
+							value: `Vanity Code: ${vanityData.code}\nUses: ${vanityData.uses}`
+						},
+						{
+							name: "Guild",
+							value: `${guild.name}\n\`${guild.id}\``
+						}
+					]
+				}]
+			});
+		}
+	});
+	
 
 	if (defcon <= 3) {
 		// DM user saying Invites are disabled for security reasons, then kick them with the same reason

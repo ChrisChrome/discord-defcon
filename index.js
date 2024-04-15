@@ -413,11 +413,12 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 							]
 						}]
 					});
-					return client.invites[invite.code] = invite.uses
+					client.invites[invite.code] = invite.uses
+					isInv = true
 				}
 			})
 		})();
-
+		if (isInv) return;
 		channel.send({
 			embeds: [{
 				color: 0x00ff00,

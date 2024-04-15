@@ -252,6 +252,8 @@ client.on("ready", async () => {
 		})
 		guild.fetchVanityData().then(vanityData => {
 			client.invites[vanityData.code] = vanityData.uses
+		}).catch(err => {
+			// do fuck all, they dont have vanity
 		})
 	})
 
@@ -440,7 +442,9 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 				}]
 			});
 		}
-	});
+	}).catch(err => {
+		// do fuck all, they dont have vanity
+	})
 	
 
 	if (defcon <= 3) {

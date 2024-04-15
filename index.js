@@ -385,11 +385,11 @@ client.on('inviteCreate', (invite) => { //if someone creates an invite while bot
 });
 
 client.on('guildMemberAdd', async (member) => { // We're just gonna always send invite logs, even if we're not monitoring them
-	invites = 0;
 	const channel = client.channels.cache.get(config.discord.invitelog)
 	let guild = member.guild
 	member.guild.invites.fetch().then(async guildInvites => { //get all guild invites
 		guildInvites.forEach(invite => { //basically a for loop over the invites
+
 			if (invite.uses != client.invites[invite.code]) { //if it doesn't match what we stored:
 				channel.send({
 					embeds: [{

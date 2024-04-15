@@ -386,7 +386,7 @@ client.on('guildMemberAdd', async (member) => { // We're just gonna always send 
 	const channel = client.channels.cache.get(config.discord.invitelog)
 	let guild = member.guild
 	member.guild.invites.fetch().then(async guildInvites => { //get all guild invites
-		console.log(`len ${guildInvites.flatMap().length}`)
+		console.log(`len ${member.guild.invites.cache.length}`)
 		guildInvites.forEach(invite => { //basically a for loop over the invites
 			invites++
 			console.log(invites)

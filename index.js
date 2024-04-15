@@ -188,7 +188,7 @@ let slowmode_categories = [];
 client.on("ready", async () => {
 	console.log(`${colors.magenta("[DEBUG]")} Environment variables: ${JSON.stringify(process.env)}`)
 	// Get port for webserver from environment over config file (for running on pterodactyl/other panels)
-	var port = process.env.PORT || config.port;
+	var port = process.env.SERVER_PORT || config.port;
 	// Start webserver
 	if (port) app.listen(port, () => {
 		console.log(`${colors.cyan("[INFO]")} Webserver started on port ${port}`)

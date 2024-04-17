@@ -351,7 +351,7 @@ client.on('interactionCreate', async interaction => {
 						title: `We are now at DEFCON ${defcon}`,
 						description: config.DEFCON.levels[defcon].message,
 						footer: {
-							text: `Updated by ${interaction.user.displayName} at`
+							text: `Updated by ${interaction.user.displayName}`
 						},
 						timestamp: new Date()
 					}

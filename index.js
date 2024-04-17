@@ -341,7 +341,22 @@ client.on('interactionCreate', async interaction => {
 				return;
 			}
 			updateDefcon(level);
-
+			// Send automated announcement.
+			color = parseInt(config.DEFCON.levels[defcon].color.replace("#", ""), 16);
+			client.channels.cache.get(config.discord.announcement_channel).send({
+				content: config.discord.announcment_content,
+				embeds: [
+					{
+						color,
+						title: `We are now at DEFCON ${defcon}`,
+						description: config.DEFCON.levels[defcon].message,
+						footer: {
+							text: `Updated by ${interaction.user.displayName} at`
+						},
+						timestamp: new Date()
+					}
+				]
+			})
 			// Send response
 			interaction.reply({ content: `Successfully set DEFCON level to ${level}.`, ephemeral: true });
 			break;

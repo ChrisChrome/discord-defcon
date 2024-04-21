@@ -125,7 +125,7 @@ function updateDefcon(level) {
 function updateSlowmodes() {
 	if (defcon >= 3) {
 		// Disable slowmodes
-		slowmode_categories.forEach(async (category) => {
+		slowmode_categories.forEach((category) => {
 			category.category.guild.channels.cache.forEach((chan) => {
 				if (chan.parentId == category.category.id) {
 					if (chan.rateLimitPerUser != category.defaultTime) chan.setRateLimitPerUser(category.defaultTime);
@@ -133,12 +133,12 @@ function updateSlowmodes() {
 			})
 		});
 
-		slowmode_channels.forEach(async (channel) => {
+		slowmode_channels.forEach((channel) => {
 			if (channel.channel.rateLimitPerUser != channel.defaultTime) return channel.channel.setRateLimitPerUser(channel.defaultTime);
 		})
 	} else {
 		// Enable slowmodes
-		slowmode_categories.forEach(async (category) => {
+		slowmode_categories.forEach((category) => {
 			category.category.guild.channels.cache.forEach((chan) => {
 				if (chan.parentId == category.category.id) {
 					if (chan.rateLimitPerUser != category.time) chan.setRateLimitPerUser(category.time);
@@ -146,7 +146,7 @@ function updateSlowmodes() {
 			})
 		});
 
-		slowmode_channels.forEach(async (channel) => {
+		slowmode_channels.forEach((channel) => {
 			if (channel.channel.rateLimitPerUser != channel.time) return channel.channel.setRateLimitPerUser(channel.time);
 		})
 	}

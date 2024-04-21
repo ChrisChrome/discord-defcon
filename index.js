@@ -128,26 +128,26 @@ function updateSlowmodes() {
 		slowmode_categories.forEach(async (category) => {
 			category.category.guild.channels.cache.forEach((chan) => {
 				if (chan.parentId == category.category.id) {
-					chan.setRateLimitPerUser(category.defaultTime);
+					if (chan.rateLimitPerUser != category.defaultTime) chan.setRateLimitPerUser(category.defaultTime);
 				}
 			})
 		});
 
 		slowmode_channels.forEach(async (channel) => {
-			return channel.channel.setRateLimitPerUser(channel.defaultTime);
+			if (channel.channel.rateLimitPerUser != channel.defaultTime) return channel.channel.setRateLimitPerUser(channel.defaultTime);
 		})
 	} else {
 		// Enable slowmodes
 		slowmode_categories.forEach(async (category) => {
 			category.category.guild.channels.cache.forEach((chan) => {
 				if (chan.parentId == category.category.id) {
-					chan.setRateLimitPerUser(category.time);
+					if (chan.rateLimitPerUser != category.time) chan.setRateLimitPerUser(category.time);
 				}
 			})
 		});
 
 		slowmode_channels.forEach(async (channel) => {
-			return channel.channel.setRateLimitPerUser(channel.time);
+			if (channel.channel.rateLimitPerUser != channel.time) return channel.channel.setRateLimitPerUser(channel.time);
 		})
 	}
 }

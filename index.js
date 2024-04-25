@@ -292,23 +292,12 @@ client.on("ready", async () => {
 					]
 				},
 				{
-					name: "confirm1",
-					description: "Confirm the DEFCON level change.",
-					type: 5,
-					required: true
-				},
-				{
-					name: "confirm2",
-					description: "Are you REALLY sure?",
-					type: 5,
-					required: true
+					name: "reason",
+					description: "Why is the defcon changing to this level?",
+					required: true,
+					type: 3
 				}
 			]
-		},
-		{
-			name: "msg",
-			description: "Send a message to a channel.",
-			default_member_permissions: 0
 		}
 	]
 	// Do slash command stuff
@@ -332,6 +321,8 @@ client.on('interactionCreate', async interaction => {
 
 	switch (command) {
 		case "defcon":
+			// Check if reason is set, if not return
+			if (!interaction.options.getString("reason")) return interaction.reply({ephemeral: true, content: "You MUST provide a reason!"});
 			// Update defcon
 			let level = interaction.options.getString("level");
 			newLevel = new Number(level);
@@ -350,6 +341,12 @@ client.on('interactionCreate', async interaction => {
 						color,
 						title: `We are now at DEFCON ${defcon}`,
 						description: config.DEFCON.levels[defcon].message,
+						fields: [
+							{
+								name: "Reason",
+								value: interaction.options.getString("reason")
+							}
+						],
 						footer: {
 							text: `Updated by ${interaction.user.displayName}`
 						},

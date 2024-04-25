@@ -296,6 +296,12 @@ client.on("ready", async () => {
 					description: "Why is the defcon changing to this level?",
 					required: true,
 					type: 3
+				},
+				{
+					name: "silent",
+					type: 5,
+					description: "Don't send the @everyone funny ping",
+					required: false
 				}
 			]
 		}
@@ -335,7 +341,7 @@ client.on('interactionCreate', async interaction => {
 			// Send automated announcement.
 			color = parseInt(config.DEFCON.levels[defcon].color.replace("#", ""), 16);
 			client.channels.cache.get(config.discord.announcement_channel).send({
-				content: config.discord.announcment_content,
+				content: interaction.options.getBoolean("silent") ? "" : config.discord.announcment_content,
 				embeds: [
 					{
 						color,
